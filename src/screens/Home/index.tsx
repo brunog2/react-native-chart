@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useRef} from 'react';
 import {MainView} from './styles';
 import {Chart} from '../../components/Chart';
 import BottomSheet, {
+  BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
@@ -20,19 +21,31 @@ export const Home = (): JSX.Element => {
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
+
+  const handleCloseModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.close();
+  }, []);
+
   const handleSheetChanges = useCallback((index: number) => {
     index >= 0 && setIsOpen(prev => prev !== true && true);
     index < 0 && setIsOpen(prev => prev !== false && false);
     console.log('handleSheetChanges', index);
   }, []);
 
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    [],
+  );
+
   // renders
   return (
-    <GestureHandlerRootView
-      style={[
-        styles.container,
-        {backgroundColor: isOpen ? 'rgba(0, 0, 0, 0.5)' : 'white'},
-      ]}>
+    <GestureHandlerRootView style={[styles.container]}>
       <BottomSheetModalProvider>
         <Button
           onPress={handlePresentModalPress}
@@ -40,12 +53,19 @@ export const Home = (): JSX.Element => {
           color="black"
         />
         <BottomSheetModal
+          style={{elevation: 1}}
           ref={bottomSheetModalRef}
           index={1}
           snapPoints={snapPoints}
-          onChange={handleSheetChanges}>
+          backdropComponent={renderBackdrop}
+          enablePanDownToClose={false}>
           <View style={styles.contentContainer}>
             <Text>Awesome 🎉</Text>
+            <Button
+              onPress={handleCloseModalPress}
+              title="Close Modal"
+              color="black"
+            />
           </View>
         </BottomSheetModal>
       </BottomSheetModalProvider>
