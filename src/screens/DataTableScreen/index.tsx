@@ -2,6 +2,11 @@ import React, {useEffect} from 'react';
 import {FlatList} from 'react-native-gesture-handler';
 import {Appbar, Checkbox, DataTable} from 'react-native-paper';
 import {tableData} from '../../utils/mocks/table';
+import Animated, {
+  BounceInDown,
+  SlideInDown,
+  SlideInUp,
+} from 'react-native-reanimated';
 
 export const DataTableScreen = () => {
   const [data, setData] = React.useState(tableData);
@@ -45,18 +50,22 @@ export const DataTableScreen = () => {
 
   return (
     <>
-      {showAppBar && (
-        <Appbar.Header>
-          <Appbar.Action
-            icon={isAllSelected ? 'checkbox-marked' : 'checkbox-blank-outline'}
-            onPress={handleSelectAll}
-          />
-          <Appbar.Content title={headerTitle} />
-          <Appbar.Action icon="pencil" onPress={() => {}} />
-          <Appbar.Action icon="delete" onPress={() => {}} />
-          <Appbar.Action icon="close" onPress={handleCancelSelect} />
-        </Appbar.Header>
-      )}
+      <Animated.View>
+        {showAppBar && (
+          <Appbar.Header>
+            <Appbar.Action
+              icon={
+                isAllSelected ? 'checkbox-marked' : 'checkbox-blank-outline'
+              }
+              onPress={handleSelectAll}
+            />
+            <Appbar.Content title={headerTitle} />
+            <Appbar.Action icon="pencil" onPress={() => {}} />
+            <Appbar.Action icon="delete" onPress={() => {}} />
+            <Appbar.Action icon="close" onPress={handleCancelSelect} />
+          </Appbar.Header>
+        )}
+      </Animated.View>
       <DataTable>
         <DataTable.Header>
           <DataTable.Title>

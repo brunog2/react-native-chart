@@ -3,6 +3,7 @@ export interface TableDataInterface {
   name: string;
   age: number;
   hasCar: boolean;
+  checked?: boolean;
 }
 export const tableData: TableDataInterface[] = [
   {id: 1, name: 'Jan', age: 19, hasCar: true},
