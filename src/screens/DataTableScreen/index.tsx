@@ -10,6 +10,9 @@ import Animated, {
 
 export const DataTableScreen = () => {
   const [data, setData] = React.useState(tableData);
+  const [page, setPage] = React.useState(0);
+  const itemsPerPage = 2;
+  const numberOfPages = data.length % itemsPerPage;
 
   const handleItemPress = (index: number) => {
     setData(data =>
@@ -94,6 +97,13 @@ export const DataTableScreen = () => {
               </DataTable.Row>
             </>
           )}
+        />
+
+        <DataTable.Pagination
+          numberOfPages={numberOfPages}
+          numberOfItemsPerPage={itemsPerPage}
+          page={page}
+          onPageChange={page => setPage(page + 1)}
         />
       </DataTable>
     </>
