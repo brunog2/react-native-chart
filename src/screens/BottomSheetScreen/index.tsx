@@ -1,13 +1,9 @@
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useRef} from 'react';
 
 import {StyleSheet, Text, View, Button} from 'react-native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheet} from '../../components/BottomSheet';
 
-export const Home = (): JSX.Element => {
-  const [isOpen, setIsOpen] = React.useState(false);
-  // ref
+export const BottomSheetScreen = (): JSX.Element => {
   const bottomSheetModalRef: any = useRef(null);
 
   const handleOpenModalPress = () => {
