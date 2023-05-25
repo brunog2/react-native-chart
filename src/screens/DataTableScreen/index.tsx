@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FlatList} from 'react-native-gesture-handler';
 import {Appbar, Checkbox, DataTable} from 'react-native-paper';
 import {tableData} from '../../utils/mocks/table';
@@ -8,11 +8,16 @@ import Animated, {
   SlideInUp,
 } from 'react-native-reanimated';
 
+const numberOfItemsPerPageList = [2, 3, 4];
+
 export const DataTableScreen = () => {
   const [data, setData] = React.useState(tableData);
   const [page, setPage] = React.useState(0);
-  const itemsPerPage = 2;
-  const numberOfPages = data.length % itemsPerPage;
+  const [numberOfItemsPerPage, onItemsPerPageChange] = React.useState(
+    numberOfItemsPerPageList[0],
+  );
+  const from = page * numberOfItemsPerPage;
+  const to = Math.min((page + 1) * numberOfItemsPerPage, data.length);
 
   const handleItemPress = (index: number) => {
     setData(data =>
@@ -82,28 +87,29 @@ export const DataTableScreen = () => {
 
         <FlatList
           data={tableData}
+          keyExtractor={item => item.id.toString()}
           renderItem={({item, index}) => (
-            <>
-              <DataTable.Row onPress={() => handleItemPress(index)}>
-                <DataTable.Cell>
-                  <Checkbox status={item.checked ? 'checked' : 'unchecked'} />
-                </DataTable.Cell>
-                <DataTable.Cell>{item.id}</DataTable.Cell>
-                <DataTable.Cell>{item.name}</DataTable.Cell>
-                <DataTable.Cell>{item.age}</DataTable.Cell>
-                <DataTable.Cell>
-                  {item.hasCar ? 'True' : 'False'}
-                </DataTable.Cell>
-              </DataTable.Row>
-            </>
+            <DataTable.Row onPress={() => handleItemPress(index)}>
+              <DataTable.Cell>
+                <Checkbox status={item.checked ? 'checked' : 'unchecked'} />
+              </DataTable.Cell>
+              <DataTable.Cell>{item.id}</DataTable.Cell>
+              <DataTable.Cell>{item.name}</DataTable.Cell>
+              <DataTable.Cell>{item.age}</DataTable.Cell>
+              <DataTable.Cell>{item.hasCar ? 'True' : 'False'}</DataTable.Cell>
+            </DataTable.Row>
           )}
         />
 
         <DataTable.Pagination
-          numberOfPages={numberOfPages}
-          numberOfItemsPerPage={itemsPerPage}
+          numberOfPages={Math.ceil(data.length / numberOfItemsPerPage)}
           page={page}
-          onPageChange={page => setPage(page + 1)}
+          label={`${from + 1}-${to} of ${data.length}`}
+          showFastPaginationControls
+          onPageChange={page => setPage(page)}
+          numberOfItemsPerPage={numberOfItemsPerPage}
+          onItemsPerPageChange={onItemsPerPageChange}
+          selectPageDropdownLabel={'Rows per page'}
         />
       </DataTable>
     </>
