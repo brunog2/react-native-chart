@@ -55,6 +55,7 @@ export const MultiSelect = React.forwardRef(
           rules={rules}
           defaultValue={defaultValue}
           render={({field: {value, onChange, onBlur}}) => {
+            console.log('render');
             const handleSelectAll = () => {
               if (isAllSelected) {
                 setSelectedItems([]);
@@ -62,38 +63,56 @@ export const MultiSelect = React.forwardRef(
                 setSelectedItems(data);
               }
             };
+            useEffect(() => {
+              console.log('SHOWING DIALOG', selectedItems);
+            }, [showDialog]);
+            const handleItemPress = (identifier: any) => {
+              const item = data.find(
+                item => item[keyExtractor] === identifier,
+              )!;
+              console.log('found item', item);
+              let newItems = [...selectedItems];
 
-            const handleItemPress = (value: any) => {
-              setSelectedItems(items => {
-                const item = data.find(item => item[keyExtractor] === value)!;
+              if (item && isItemSelected(identifier)) {
+                console.log('item is selected, unselecting', newItems);
+                newItems = newItems.filter(
+                  item => item[keyExtractor] !== identifier,
+                )!;
+                console.log('unselected item', newItems);
+              } else {
+                newItems.push(item);
+              }
 
-                if (item && selectedItems.includes(item)) {
-                  items.splice(items.indexOf(item), 1);
-                  return items;
-                } else {
-                  items.push(item);
-                  return items;
-                }
-              });
+              setSelectedItems(newItems);
             };
 
             const handleSave = () => {
               onChange(selectedItems);
-              console.log('O VALOR AGORA', value);
+              console.log('O VALOR AGORA', selectedItems);
+              console.log('O VALOR', value);
               setShowDialog(false);
             };
 
             const handleCancel = () => {
+              console.log('CANCEL returning to previous value', value);
+              onChange(value);
+              setSelectedItems(value);
               setShowDialog(false);
             };
 
-            const removeItem = (value: any) => {
-              const item = selectedItems.find(
-                item => item[keyExtractor] === value,
+            const removeItem = (identifier: any) => {
+              const items = selectedItems.filter(
+                item => item[keyExtractor] !== identifier,
               )!;
-              const items = selectedItems.slice(selectedItems.indexOf(item), 1);
               setSelectedItems(items);
+              console.log('O VALOR AGORA', items);
               onChange(items);
+            };
+
+            const isItemSelected = (identifier: any) => {
+              return selectedItems.some(
+                item => item[keyExtractor] === identifier,
+              );
             };
 
             return (
@@ -103,16 +122,17 @@ export const MultiSelect = React.forwardRef(
                 </Button>
 
                 {value &&
-                  value
-                    ?.filter((i: GenericObject) => i.checked)
-                    .map((i: GenericObject) => (
-                      <Chip
-                        style={{marginVertical: 5}}
-                        icon={'close'}
-                        onPress={() => removeItem(i[keyExtractor])}>
-                        {i[labelKey]}
-                      </Chip>
-                    ))}
+                  value.map((i: GenericObject) => (
+                    <Chip
+                      selected
+                      key={i[keyExtractor]}
+                      style={{marginVertical: 5}}
+                      closeIcon={'close'}
+                      onClose={() => removeItem(i[keyExtractor])}
+                      onPress={() => removeItem(i[keyExtractor])}>
+                      {i[labelKey]}
+                    </Chip>
+                  ))}
 
                 <Portal>
                   <Dialog visible={showDialog}>
@@ -142,7 +162,7 @@ export const MultiSelect = React.forwardRef(
                               <Checkbox.Item
                                 label={item[labelKey].toString()}
                                 status={
-                                  selectedItems.includes(item)
+                                  isItemSelected(item[keyExtractor])
                                     ? 'checked'
                                     : 'unchecked'
                                 }
