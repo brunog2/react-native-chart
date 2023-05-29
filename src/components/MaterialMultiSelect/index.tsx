@@ -3,6 +3,7 @@ import {FlatList} from 'react-native';
 import {Control, Controller, RegisterOptions} from 'react-hook-form';
 import {
   Button,
+  ButtonProps,
   Checkbox,
   Chip,
   Dialog,
@@ -13,7 +14,7 @@ import {
 import {MainView} from './styles';
 import {GenericObject} from '../../types/GenericObjectType/genericObjectType';
 
-interface MultiSelectProps {
+interface MaterialMultiSelectProps extends ButtonProps {
   data: GenericObject[];
   keyExtractor: string;
   labelKey: string;
@@ -24,7 +25,7 @@ interface MultiSelectProps {
   formError?: any;
 }
 
-export const MultiSelect = React.forwardRef(
+export const MaterialMultiSelect = React.forwardRef(
   (
     {
       data,
@@ -35,7 +36,8 @@ export const MultiSelect = React.forwardRef(
       defaultValue,
       rules,
       formError,
-    }: MultiSelectProps,
+      ...rest
+    }: MaterialMultiSelectProps,
     ref,
   ) => {
     const [selectedItems, setSelectedItems] = useState<GenericObject[]>([]);
@@ -45,8 +47,7 @@ export const MultiSelect = React.forwardRef(
     const filterTherm = (filter: string) =>
       filter.toString().toLowerCase().includes(search);
 
-    const isAllSelected = selectedItems.length === data.length;
-
+    const isAllSelected = selectedItems && selectedItems.length === data.length;
     return (
       <>
         <Controller
@@ -54,8 +55,12 @@ export const MultiSelect = React.forwardRef(
           name={controllerName}
           rules={rules}
           defaultValue={defaultValue}
-          render={({field: {value, onChange, onBlur}}) => {
-            console.log('render');
+          render={({field: {value, onChange}}) => {
+            useEffect(() => {
+              defaultValue && setSelectedItems(defaultValue);
+              onChange(defaultValue);
+            }, [defaultValue]);
+
             const handleSelectAll = () => {
               if (isAllSelected) {
                 setSelectedItems([]);
@@ -63,22 +68,16 @@ export const MultiSelect = React.forwardRef(
                 setSelectedItems(data);
               }
             };
-            useEffect(() => {
-              console.log('SHOWING DIALOG', selectedItems);
-            }, [showDialog]);
+
             const handleItemPress = (identifier: any) => {
               const item = data.find(
                 item => item[keyExtractor] === identifier,
               )!;
-              console.log('found item', item);
               let newItems = [...selectedItems];
-
               if (item && isItemSelected(identifier)) {
-                console.log('item is selected, unselecting', newItems);
                 newItems = newItems.filter(
                   item => item[keyExtractor] !== identifier,
                 )!;
-                console.log('unselected item', newItems);
               } else {
                 newItems.push(item);
               }
@@ -86,27 +85,23 @@ export const MultiSelect = React.forwardRef(
               setSelectedItems(newItems);
             };
 
-            const handleSave = () => {
-              onChange(selectedItems);
-              console.log('O VALOR AGORA', selectedItems);
-              console.log('O VALOR', value);
-              setShowDialog(false);
-            };
-
-            const handleCancel = () => {
-              console.log('CANCEL returning to previous value', value);
-              onChange(value);
-              setSelectedItems(value);
-              setShowDialog(false);
-            };
-
             const removeItem = (identifier: any) => {
               const items = selectedItems.filter(
                 item => item[keyExtractor] !== identifier,
               )!;
               setSelectedItems(items);
-              console.log('O VALOR AGORA', items);
               onChange(items);
+            };
+
+            const handleSave = () => {
+              onChange(selectedItems);
+              setShowDialog(false);
+            };
+
+            const handleCancel = () => {
+              onChange(value);
+              setSelectedItems(value);
+              setShowDialog(false);
             };
 
             const isItemSelected = (identifier: any) => {
@@ -117,12 +112,15 @@ export const MultiSelect = React.forwardRef(
 
             return (
               <MainView>
-                <Button mode="outlined" onPress={() => setShowDialog(true)}>
-                  Open Multi Select
+                <Button
+                  mode="outlined"
+                  onPress={() => setShowDialog(true)}
+                  {...rest}>
+                  {rest.children}
                 </Button>
 
                 {value &&
-                  value.map((i: GenericObject) => (
+                  value.slice(0, 3).map((i: GenericObject) => (
                     <Chip
                       selected
                       key={i[keyExtractor]}
@@ -133,6 +131,9 @@ export const MultiSelect = React.forwardRef(
                       {i[labelKey]}
                     </Chip>
                   ))}
+                {value && value.length > 3 && (
+                  <Chip style={{marginVertical: 5}}>...</Chip>
+                )}
 
                 <Portal>
                   <Dialog visible={showDialog}>
@@ -146,6 +147,12 @@ export const MultiSelect = React.forwardRef(
                       label="Pesquisar"
                       value={search}
                       onChangeText={search => setSearch(search)}
+                      right={
+                        <TextInput.Icon
+                          icon={'close-circle-outline'}
+                          onPress={() => setSearch('')}
+                        />
+                      }
                     />
                     <Dialog.ScrollArea style={{maxHeight: '60%'}}>
                       <Checkbox.Item

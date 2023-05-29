@@ -1,7 +1,7 @@
 import React from 'react';
 import {useForm} from 'react-hook-form';
 import {Button} from 'react-native-paper';
-import {MultiSelect} from '../../components/MultiSelect';
+import {MaterialMultiSelect} from '../../components/MaterialMultiSelect';
 import {tableData} from '../../mocks/table';
 
 export const FormScreen = () => {
@@ -19,8 +19,9 @@ export const FormScreen = () => {
   };
   return (
     <>
-      <MultiSelect
+      <MaterialMultiSelect
         data={tableData}
+        defaultValue={[tableData[0]]}
         keyExtractor="id"
         labelKey="name"
         formControl={control}
@@ -31,8 +32,9 @@ export const FormScreen = () => {
           onChange(event: any) {
             clearErrors(event.target.name);
           },
-        }}
-      />
+        }}>
+        Select
+      </MaterialMultiSelect>
       <Button mode="contained" onPress={handleSubmit(onSubmit)}>
         Submit
       </Button>
