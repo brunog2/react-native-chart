@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList} from 'react-native-gesture-handler';
 import {Appbar, Checkbox, DataTable} from 'react-native-paper';
-import {tableData} from '../../utils/mocks/table';
+import {tableData} from '../../mocks/table';
 import Animated, {
   BounceInDown,
   SlideInDown,

@@ -15,6 +15,9 @@ export const HomeScreen = ({navigation}: Props) => {
       <Button onPress={() => navigation.navigate('DataTable')}>
         Navigate to DataTableScreen
       </Button>
+      <Button onPress={() => navigation.navigate('Form')}>
+        Navigate to FormScreen
+      </Button>
     </ActionView>
   );
 };
