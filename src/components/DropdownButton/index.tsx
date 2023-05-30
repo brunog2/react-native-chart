@@ -9,6 +9,7 @@ import {
 } from './styles';
 
 interface DropdownButtonProps {
+  title: string;
   children: React.ReactNode;
 }
 
@@ -19,7 +20,7 @@ export interface DropdownButtonMethodsProps {
 }
 
 export const DropdownButton = forwardRef(
-  ({children}: DropdownButtonProps, ref) => {
+  ({children, title}: DropdownButtonProps, ref) => {
     const [showChild, setShowChild] = useState(false);
 
     const handleShow = () => setShowChild(!showChild);
@@ -32,7 +33,7 @@ export const DropdownButton = forwardRef(
       <MainView>
         <Ripple onPress={handleShow}>
           <RippleContainer>
-            <Text variant="titleSmall">ola</Text>
+            <Text variant="titleSmall">{title}</Text>
             <DropdownIcon showing={show} />
           </RippleContainer>
         </Ripple>

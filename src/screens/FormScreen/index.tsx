@@ -11,7 +11,8 @@ import {tableData} from '../../mocks/table';
 import {GenericObject} from '../../types/GenericObjectType/genericObjectType';
 import {MainView} from './styles';
 
-interface DataProps extends GenericObject {
+interface DataProps {
+  object: GenericObject;
   ref: RefObject<DropdownButtonMethodsProps>;
 }
 
@@ -25,12 +26,12 @@ export const FormScreen = () => {
     reValidateMode: 'onSubmit',
   });
 
-  const [data, setData] = useState<DataProps[]>([{}]);
+  const [data, setData] = useState<DataProps[]>([]);
 
   useEffect(() => {
-    const mock = [1, 2, 3];
+    const mock = [{name: 1}, {name: 2}, {name: 3}];
     const newData = mock.map(i => ({
-      item: i,
+      object: i,
       ref: createRef<DropdownButtonMethodsProps>(),
     }));
 
@@ -60,14 +61,16 @@ export const FormScreen = () => {
       </MaterialMultiSelect>
       <Checkbox label="Check" />
 
-      <Button onPress={() => data[1].ref.current?.handleShow()} mode="outlined">
+      <Button
+        onPress={() => data.map(i => i.ref.current?.handleShow())}
+        mode="outlined">
         Change Mode
       </Button>
 
       {data.map(i => (
-        <DropdownButton ref={i.ref}>
+        <DropdownButton ref={i.ref} title={i.object.name}>
           <>
-            <Text>{i.object}</Text>
+            <Text>{i.object.name}</Text>
             <Button onPress={() => i.ref.current?.handleShow()} mode="outlined">
               Change Mode
             </Button>
