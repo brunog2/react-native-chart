@@ -1,8 +1,19 @@
-import React from 'react';
+import React, {createRef, RefObject, useEffect, useRef, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {Button} from 'react-native-paper';
+import {Button, Surface, Text, TouchableRipple} from 'react-native-paper';
+import {Checkbox} from '../../components/Checkbox';
+import {
+  DropdownButton,
+  DropdownButtonMethodsProps,
+} from '../../components/DropdownButton';
 import {MaterialMultiSelect} from '../../components/MaterialMultiSelect';
 import {tableData} from '../../mocks/table';
+import {GenericObject} from '../../types/GenericObjectType/genericObjectType';
+import {MainView} from './styles';
+
+interface DataProps extends GenericObject {
+  ref: RefObject<DropdownButtonMethodsProps>;
+}
 
 export const FormScreen = () => {
   const {
@@ -14,14 +25,26 @@ export const FormScreen = () => {
     reValidateMode: 'onSubmit',
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
+  const [data, setData] = useState<DataProps[]>([{}]);
+
+  useEffect(() => {
+    const mock = [1, 2, 3];
+    const newData = mock.map(i => ({
+      item: i,
+      ref: createRef<DropdownButtonMethodsProps>(),
+    }));
+
+    setData(newData);
+  }, []);
+
+  const ref = useRef<DropdownButtonMethodsProps>(null);
+
+  console.log('Render FormScreen');
+
   return (
-    <>
+    <MainView>
       <MaterialMultiSelect
         data={tableData}
-        defaultValue={[tableData[0]]}
         keyExtractor="id"
         labelKey="name"
         formControl={control}
@@ -35,9 +58,22 @@ export const FormScreen = () => {
         }}>
         Select
       </MaterialMultiSelect>
-      <Button mode="contained" onPress={handleSubmit(onSubmit)}>
-        Submit
+      <Checkbox label="Check" />
+
+      <Button onPress={() => data[1].ref.current?.handleShow()} mode="outlined">
+        Change Mode
       </Button>
-    </>
+
+      {data.map(i => (
+        <DropdownButton ref={i.ref}>
+          <>
+            <Text>{i.object}</Text>
+            <Button onPress={() => i.ref.current?.handleShow()} mode="outlined">
+              Change Mode
+            </Button>
+          </>
+        </DropdownButton>
+      ))}
+    </MainView>
   );
 };

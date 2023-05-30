@@ -56,6 +56,7 @@ export const MaterialMultiSelect = React.forwardRef(
           rules={rules}
           defaultValue={defaultValue}
           render={({field: {value, onChange}}) => {
+            console.log('Rendering Material Multi Select');
             useEffect(() => {
               defaultValue && setSelectedItems(defaultValue);
               onChange(defaultValue);
@@ -100,7 +101,7 @@ export const MaterialMultiSelect = React.forwardRef(
 
             const handleCancel = () => {
               onChange(value);
-              setSelectedItems(value);
+              setSelectedItems(value || []);
               setShowDialog(false);
             };
 
