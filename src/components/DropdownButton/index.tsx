@@ -1,4 +1,5 @@
-import React, {useState, useImperativeHandle, forwardRef} from 'react';
+import React, {useState, useImperativeHandle, forwardRef, useMemo} from 'react';
+import {LayoutAnimation} from 'react-native';
 import {Text, Divider} from 'react-native-paper';
 import {
   ChildContainer,
@@ -28,6 +29,8 @@ export const DropdownButton = forwardRef(
     const hide = () => setShowChild(false);
 
     useImperativeHandle(ref, () => ({handleShow, show, hide}));
+
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
     return (
       <MainView>

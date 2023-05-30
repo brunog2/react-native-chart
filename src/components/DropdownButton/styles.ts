@@ -8,7 +8,7 @@ import {
   Divider as PaperDivider,
   TouchableRippleProps,
 } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {darkTheme, lightTheme} from '../../styles/theme';
 
 export const MainView = styled(Surface).attrs(
@@ -34,7 +34,7 @@ export const RippleContainer = styled.View`
 
 export const DropdownIcon = styled(Icon).attrs(
   (p: {showing?: boolean} & Icon): Icon => ({
-    name: p.showing ? 'arrow-up' : 'arrow-down',
+    name: p.showing ? 'arrow-drop-up' : 'arrow-drop-down',
     size: 22,
     ...p,
   }),
