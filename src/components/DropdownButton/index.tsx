@@ -34,7 +34,7 @@ export const DropdownButton = forwardRef(
         <Ripple onPress={handleShow}>
           <RippleContainer>
             <Text variant="titleSmall">{title}</Text>
-            <DropdownIcon showing={show} />
+            <DropdownIcon showing={showChild} />
           </RippleContainer>
         </Ripple>
         <Divider bold />

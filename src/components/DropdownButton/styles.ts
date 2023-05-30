@@ -34,7 +34,7 @@ export const RippleContainer = styled.View`
 
 export const DropdownIcon = styled(Icon).attrs(
   (p: {showing?: boolean} & Icon): Icon => ({
-    name: p.showing ? 'arrow-down' : 'arrow-up',
+    name: p.showing ? 'arrow-up' : 'arrow-down',
     size: 22,
     ...p,
   }),
