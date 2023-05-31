@@ -66,7 +66,6 @@ export const FormScreen = () => {
         mode="outlined">
         Change Mode
       </Button>
-
       {data.map(i => (
         <DropdownButton ref={i.ref} title={i.object.name}>
           <>
@@ -77,6 +76,11 @@ export const FormScreen = () => {
           </>
         </DropdownButton>
       ))}
+      <Button
+        mode="contained-tonal"
+        onPress={handleSubmit(() => console.log('submit'))}>
+        Submit
+      </Button>
     </MainView>
   );
 };
