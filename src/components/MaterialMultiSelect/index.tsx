@@ -23,6 +23,7 @@ interface MaterialMultiSelectProps extends ButtonProps {
   defaultValue?: GenericObject[];
   rules?: RegisterOptions;
   formError?: any;
+  onValueChange?: (value: any[]) => void;
 }
 
 export const MaterialMultiSelect = React.forwardRef(
@@ -36,6 +37,7 @@ export const MaterialMultiSelect = React.forwardRef(
       defaultValue,
       rules,
       formError,
+      onValueChange,
       ...rest
     }: MaterialMultiSelectProps,
     ref,
@@ -92,10 +94,12 @@ export const MaterialMultiSelect = React.forwardRef(
               )!;
               setSelectedItems(items);
               onChange(items);
+              onValueChange && onValueChange(items);
             };
 
             const handleSave = () => {
               onChange(selectedItems);
+              onValueChange && onValueChange(selectedItems);
               setShowDialog(false);
             };
 

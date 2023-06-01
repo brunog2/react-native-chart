@@ -1,5 +1,5 @@
 import React, {useState, useImperativeHandle, forwardRef, useMemo} from 'react';
-import {LayoutAnimation} from 'react-native';
+import {LayoutAnimation, ViewProps} from 'react-native';
 import {Text, Divider} from 'react-native-paper';
 import {
   ChildContainer,
@@ -9,7 +9,7 @@ import {
   RippleContainer,
 } from './styles';
 
-interface DropdownButtonProps {
+interface DropdownButtonProps extends ViewProps {
   title: string;
   children: React.ReactNode;
 }
@@ -21,7 +21,7 @@ export interface DropdownButtonMethodsProps {
 }
 
 export const DropdownButton = forwardRef(
-  ({children, title}: DropdownButtonProps, ref) => {
+  ({children, title, ...props}: DropdownButtonProps, ref) => {
     const [showChild, setShowChild] = useState(false);
 
     const handleShow = () => setShowChild(!showChild);
@@ -33,7 +33,7 @@ export const DropdownButton = forwardRef(
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
     return (
-      <MainView>
+      <MainView {...props}>
         <Ripple onPress={handleShow}>
           <RippleContainer>
             <Text variant="titleSmall">{title}</Text>
