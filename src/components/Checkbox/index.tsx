@@ -6,22 +6,19 @@ import {
 } from 'react-native-paper';
 
 export const Checkbox = ({label}: {label: string}) => {
-  const {control} = useForm();
+  const [status, setStatus] = React.useState<
+    'unchecked' | 'checked' | 'indeterminate'
+  >('unchecked');
+
+  console.log('RENDER INTERNAL CHECKBOX');
 
   return (
-    <Controller
-      name="checkbox"
-      control={control}
-      render={({field: {value, onChange}}) => {
-        console.log('render checkbox');
-        return (
-          <MaterialCheckbox.Item
-            status={value ? 'checked' : 'unchecked'}
-            onPress={() => onChange(!value)}
-            label={label}
-          />
-        );
-      }}
+    <MaterialCheckbox.Item
+      status={status}
+      onPress={() =>
+        setStatus(status => (status === 'checked' ? 'unchecked' : 'checked'))
+      }
+      label={label}
     />
   );
 };

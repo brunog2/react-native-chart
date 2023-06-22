@@ -50,6 +50,7 @@ export const MaterialMultiSelect = React.forwardRef(
       filter.toString().toLowerCase().includes(search);
 
     const isAllSelected = selectedItems && selectedItems.length === data.length;
+    console.log('Rendering MULTI SELECT');
     return (
       <>
         <Controller
@@ -58,7 +59,7 @@ export const MaterialMultiSelect = React.forwardRef(
           rules={rules}
           defaultValue={defaultValue}
           render={({field: {value, onChange}}) => {
-            console.log('Rendering Material Multi Select');
+            console.log('Rendering INSIDE MULTI SELECT');
             useEffect(() => {
               defaultValue && setSelectedItems(defaultValue);
               onChange(defaultValue);
