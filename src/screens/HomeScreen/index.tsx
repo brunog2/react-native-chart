@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Checkbox} from '../../components/Checkbox';
-import {MultiCheckbox} from '../../components/MultiCheckbox';
+import {MultiSelect} from '../../components/MultiSelect';
 
 type Props = NativeStackScreenProps<RootStackParamList>;
 
@@ -29,12 +29,6 @@ export const HomeScreen = ({navigation}: Props) => {
       <Button onPress={() => navigation.navigate('Form')}>
         Navigate to FormScreen
       </Button>
-
-      <MultiCheckbox
-        onConfirm={data =>
-          console.log(data.filter(i => i.status === 'checked'))
-        }
-      />
     </ActionView>
   );
 };

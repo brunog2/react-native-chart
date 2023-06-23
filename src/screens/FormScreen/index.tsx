@@ -16,6 +16,8 @@ import {
   FormDataInterface,
 } from '../../types/FormDataType/formDataType';
 import {formData} from '../../mocks/formData';
+import {MultiSelect} from '../../components/MultiSelect';
+import {ControlledMultiSelect} from '../../components/ControlledMultiSelect';
 
 interface DataProps {
   object: GenericObject;
@@ -94,7 +96,7 @@ export const FormScreen = () => {
 
   return (
     <MainView>
-      <MaterialMultiSelect
+      {/* <MaterialMultiSelect
         data={formData}
         keyExtractor="id"
         labelKey="name"
@@ -106,7 +108,19 @@ export const FormScreen = () => {
           handleSelectionChange(items, ModuleOptions.main)
         }>
         Select
-      </MaterialMultiSelect>
+      </MaterialMultiSelect> */}
+
+      <ControlledMultiSelect
+        data={tableData}
+        itemKey="id"
+        labelKey="name"
+        formControl={control}
+        formError={errors.multiSelect}
+        controllerName="multiSelect"
+        rules={defaultRules}
+        onValueChange={items => console.log(items)}>
+        Selecione os itens
+      </ControlledMultiSelect>
 
       {getValues('dynamicInputs')[0].id !== -1 &&
         fields.map((field, index) => {
