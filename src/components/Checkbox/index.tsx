@@ -1,24 +1,46 @@
-import React from 'react';
-import {Controller, useForm} from 'react-hook-form';
-import {
-  Checkbox as MaterialCheckbox,
-  CheckboxItemProps,
-} from 'react-native-paper';
+import React, {memo, useCallback, useEffect} from 'react';
+import {Checkbox as MaterialCheckbox} from 'react-native-paper';
 
-export const Checkbox = ({label}: {label: string}) => {
-  const [status, setStatus] = React.useState<
-    'unchecked' | 'checked' | 'indeterminate'
-  >('unchecked');
+interface CheckboxProps {
+  label: string;
+  status?: 'unchecked' | 'checked' | 'indeterminate';
+  onPress?: (status: 'unchecked' | 'checked' | 'indeterminate') => void;
+}
 
-  console.log('RENDER INTERNAL CHECKBOX');
+export const Checkbox = memo(
+  ({label, status, onPress}: CheckboxProps) => {
+    const [statusData, setStatusData] = React.useState<
+      'unchecked' | 'checked' | 'indeterminate'
+    >(status || 'unchecked');
 
-  return (
-    <MaterialCheckbox.Item
-      status={status}
-      onPress={() =>
-        setStatus(status => (status === 'checked' ? 'unchecked' : 'checked'))
-      }
-      label={label}
-    />
-  );
-};
+    useEffect(() => {
+      console.log('STATUS CHANGES', status, statusData);
+      status && status !== statusData && setStatusData(status);
+    }, [status]);
+
+    console.log('RENDER INTERNAL CHECKBOX', status, statusData);
+
+    const handleOnPress = useCallback(() => {
+      console.log('ON PRESS');
+      // setStatusData(status => (status === 'checked' ? 'unchecked' : 'checked'));
+      onPress && onPress(statusData);
+    }, [statusData]);
+
+    return (
+      <MaterialCheckbox.Item
+        status={statusData}
+        onPress={handleOnPress}
+        label={label}
+      />
+    );
+  },
+  (prevProps, nextProps) => {
+    /*
+      return true if passing nextProps to render would return
+      the same result as passing prevProps to render,
+      otherwise return false
+      */
+
+    return nextProps.status === prevProps.status;
+  },
+);
