@@ -8,7 +8,7 @@ import {SelectedItemsView} from '../MaterialMultiSelect/styles';
 
 interface MultiSelectProps {
   data: GenericObject[];
-  defaultSelectedData?: GenericObject[];
+  value?: GenericObject[];
   itemKey: string;
   labelKey: string;
   title?: string;
@@ -19,7 +19,7 @@ interface MultiSelectProps {
 
 export const MultiSelect = ({
   data,
-  defaultSelectedData,
+  value,
   title,
   itemKey,
   labelKey,
@@ -34,8 +34,8 @@ export const MultiSelect = ({
     setVisibleData(visible);
   }, [visible]);
 
-  useEffect(() => {
-    if (!defaultSelectedData && data) {
+  const handleSelectedData = useCallback(() => {
+    if (!value && data) {
       const initialData = data.map((i: GenericObject) => ({
         ...i,
         status: 'unchecked',
@@ -43,9 +43,10 @@ export const MultiSelect = ({
 
       setSelectedData(initialData);
     }
-    if (defaultSelectedData && data) {
+    if (value && data) {
+      console.log('VALOR', value);
       const initialData = data.map((i: GenericObject) => {
-        const isDefaultItem = defaultSelectedData.some(
+        const isDefaultItem = value.some(
           defaultItem => defaultItem[itemKey] === i[itemKey],
         );
 
@@ -64,7 +65,11 @@ export const MultiSelect = ({
 
       setSelectedData(initialData);
     }
-  }, [data, defaultSelectedData]);
+  }, [data, value]);
+
+  useEffect(() => {
+    handleSelectedData();
+  }, [data, value]);
 
   const toggleTaskCompletion = (item: GenericObject, itemKey: string) => {
     console.log('COMPLETION', item, itemKey);
@@ -104,6 +109,7 @@ export const MultiSelect = ({
   };
 
   const handleDismiss = useCallback(() => {
+    handleSelectedData();
     setVisibleData(false);
     onDismiss && onDismiss();
   }, []);
@@ -111,6 +117,27 @@ export const MultiSelect = ({
   const handleConfirm = () =>
     onConfirm && onConfirm(selectedData.filter(i => i.status === 'checked'));
 
+  const isAllChecked = selectedData.every(i => i.status === 'checked');
+  const isSomeChecked = selectedData.some(i => i.status === 'checked');
+  const selectAllStatus = isAllChecked
+    ? 'checked'
+    : isSomeChecked
+    ? 'indeterminate'
+    : 'unchecked';
+
+  const handleCheckAll = () => {
+    if (isAllChecked) {
+      setSelectedData(prevData =>
+        prevData.map(i => ({...i, status: 'unchecked'})),
+      );
+    } else {
+      setSelectedData(prevData =>
+        prevData.map(i => ({...i, status: 'checked'})),
+      );
+    }
+  };
+
+  // console.log('IS NONE CHECKED', isNoneChecked, selectAllStatus);
   return (
     <Portal>
       <Dialog
@@ -118,7 +145,13 @@ export const MultiSelect = ({
         onDismiss={handleDismiss}
         style={{maxHeight: '60%'}}>
         <Dialog.Title>{title || 'Selecione os itens'}</Dialog.Title>
-
+        <Dialog.Content>
+          <Checkbox
+            label={'Selecionar todos'}
+            status={selectAllStatus}
+            onPress={handleCheckAll}
+          />
+        </Dialog.Content>
         <Dialog.ScrollArea>
           <FlatList
             data={selectedData}

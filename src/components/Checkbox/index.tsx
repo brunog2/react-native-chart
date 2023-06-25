@@ -14,11 +14,11 @@ export const Checkbox = memo(
     >(status || 'unchecked');
 
     useEffect(() => {
-      console.log('STATUS CHANGES', status, statusData);
+      // console.log('STATUS CHANGES', status, statusData);
       status && status !== statusData && setStatusData(status);
     }, [status]);
 
-    console.log('RENDER INTERNAL CHECKBOX', status, statusData);
+    // console.log('RENDER INTERNAL CHECKBOX', status, statusData);
 
     const handleOnPress = useCallback(() => {
       console.log('ON PRESS');

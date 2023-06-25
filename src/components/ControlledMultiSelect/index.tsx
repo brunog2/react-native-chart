@@ -48,10 +48,12 @@ export const ControlledMultiSelect = forwardRef(
               <Button onPress={() => setVisible(true)}>{children}</Button>
               <MultiSelect
                 data={data}
+                value={value}
                 itemKey={itemKey}
                 labelKey={labelKey}
                 onConfirm={data => {
                   onChange(data);
+                  setVisible(false);
                   onValueChange && onValueChange(data);
                 }}
                 onDismiss={() => setVisible(false)}
