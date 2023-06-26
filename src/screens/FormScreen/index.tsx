@@ -18,7 +18,9 @@ import {
 import {formData} from '../../mocks/formData';
 import {MultiSelect} from '../../components/MultiSelect';
 import {ControlledMultiSelect} from '../../components/ControlledMultiSelect';
-import {View} from 'react-native';
+import {Dimensions, View} from 'react-native';
+import {BarChart} from 'react-native-chart-kit';
+import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
 
 interface DataProps {
   object: GenericObject;
@@ -119,12 +121,33 @@ export const FormScreen = () => {
       const field = {
         ...itemToAppend,
         status: itemToAppend.status || 'unchecked',
-        value: itemToAppend.age.toString() || '',
+        value: '',
       };
       append(field);
     }
     console.log('Fields', getValues('dynamicInputs'));
   };
+
+  const data = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+    datasets: [
+      {
+        data: [20, 45, 28, 80, 99, 43],
+      },
+    ],
+  };
+
+  const chartConfig: AbstractChartConfig = {
+    backgroundGradientFrom: '#0c00ad',
+    backgroundGradientFromOpacity: 1,
+    backgroundGradientTo: '#200079',
+    backgroundGradientToOpacity: 1,
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false, // optional,
+  };
+  const screenWidth = Dimensions.get('window').width;
 
   return (
     <MainView>
@@ -150,11 +173,21 @@ export const FormScreen = () => {
         formControl={control}
         formError={errors.multiSelect}
         controllerName="multiSelect"
-        defaultValue={[tableData[0]]}
         rules={defaultRules}
         onValueChange={handleSelectValueChange}>
         Selecione os itens
       </ControlledMultiSelect>
+
+      <BarChart
+        yAxisSuffix="M"
+        style={{borderRadius: 5}}
+        data={data}
+        width={screenWidth}
+        height={220}
+        yAxisLabel="$"
+        chartConfig={chartConfig}
+        verticalLabelRotation={30}
+      />
 
       {getValues('dynamicInputs') &&
         getValues('dynamicInputs')?.length > 0 &&
