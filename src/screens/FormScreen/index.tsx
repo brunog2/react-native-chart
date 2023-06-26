@@ -50,20 +50,20 @@ export const FormScreen = () => {
   });
   const {fields, remove} = useFieldArray({control, name: 'dynamicInputs'});
 
-  const [data, setData] = useState<DataProps[]>([]);
-  const [fetchedData, setFetchedData] = useState(formData);
+  // const [data, setData] = useState<DataProps[]>([]);
+  // const [fetchedData, setFetchedData] = useState(formData);
 
-  useEffect(() => {
-    const mock = [{name: 1}, {name: 2}, {name: 3}];
-    const newData = mock.map(i => ({
-      object: i,
-      ref: createRef<DropdownButtonMethodsProps>(),
-    }));
+  // useEffect(() => {
+  //   const mock = [{name: 1}, {name: 2}, {name: 3}];
+  //   const newData = mock.map(i => ({
+  //     object: i,
+  //     ref: createRef<DropdownButtonMethodsProps>(),
+  //   }));
 
-    setData(newData);
-  }, []);
+  //   setData(newData);
+  // }, []);
 
-  const ref = useRef<DropdownButtonMethodsProps>(null);
+  // const ref = useRef<DropdownButtonMethodsProps>(null);
 
   console.log('Render FormScreen');
 
@@ -74,25 +74,25 @@ export const FormScreen = () => {
     },
   };
 
-  enum ModuleOptions {
-    main = 'dynamicInputs',
-    firstModule = 'firstModuleInputs',
-    secondModule = 'secondModuleInputs',
-  }
+  // enum ModuleOptions {
+  //   main = 'dynamicInputs',
+  //   firstModule = 'firstModuleInputs',
+  //   secondModule = 'secondModuleInputs',
+  // }
 
-  const handleSelectionChange = (
-    data: FormDataInterface[],
-    selectType: ModuleOptions,
-  ) => {
-    const dynamicInputsForm = data.map(
-      (i): DataInterface => ({
-        id: i.id,
-        name: i.name,
-        value: null,
-      }),
-    );
-    setValue(selectType, dynamicInputsForm);
-  };
+  // const handleSelectionChange = (
+  //   data: FormDataInterface[],
+  //   selectType: ModuleOptions,
+  // ) => {
+  //   const dynamicInputsForm = data.map(
+  //     (i): DataInterface => ({
+  //       id: i.id,
+  //       name: i.name,
+  //       value: null,
+  //     }),
+  //   );
+  //   setValue(selectType, dynamicInputsForm);
+  // };
 
   return (
     <MainView>
@@ -122,7 +122,7 @@ export const FormScreen = () => {
         Selecione os itens
       </ControlledMultiSelect>
 
-      {getValues('dynamicInputs')[0].id !== -1 &&
+      {/* {getValues('dynamicInputs')[0].id !== -1 &&
         fields.map((field, index) => {
           return (
             <>
@@ -137,9 +137,9 @@ export const FormScreen = () => {
               />
             </>
           );
-        })}
+        })} */}
 
-      {getValues('dynamicInputs')[0].id !== -1 &&
+      {/* {getValues('dynamicInputs')[0].id !== -1 &&
         getValues('dynamicInputs').map((item, index) => {
           return (
             <>
@@ -162,9 +162,9 @@ export const FormScreen = () => {
               </MaterialMultiSelect>
             </>
           );
-        })}
+        })} */}
 
-      {data.map(i => (
+      {/* {data.map(i => (
         <DropdownButton
           ref={i.ref}
           title={i.object.name}
@@ -176,7 +176,7 @@ export const FormScreen = () => {
             </Button>
           </>
         </DropdownButton>
-      ))}
+      ))} */}
 
       <Button
         mode="contained-tonal"

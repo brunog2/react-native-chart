@@ -45,7 +45,9 @@ export const ControlledMultiSelect = forwardRef(
           rules={rules}
           render={({field: {value, onChange}}) => (
             <>
-              <Button onPress={() => setVisible(true)}>{children}</Button>
+              <Button onPress={() => setVisible(true)} mode="outlined">
+                {children}
+              </Button>
               <MultiSelect
                 data={data}
                 value={value}

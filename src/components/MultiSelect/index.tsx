@@ -51,6 +51,7 @@ export const MultiSelect = ({
         );
 
         if (isDefaultItem) {
+          console.log('É DEFAULT ITEM', value);
           return {
             ...i,
             status: 'checked',
@@ -109,10 +110,11 @@ export const MultiSelect = ({
   };
 
   const handleDismiss = useCallback(() => {
+    console.log(`SETANDO VALOR ANTERIOR`, value);
     handleSelectedData();
-    setVisibleData(false);
+    // setVisibleData(false);
     onDismiss && onDismiss();
-  }, []);
+  }, [value]);
 
   const handleConfirm = () =>
     onConfirm && onConfirm(selectedData.filter(i => i.status === 'checked'));
