@@ -57,7 +57,6 @@ export const MultiSelect = ({
             status: 'checked',
           };
         }
-
         return {
           ...i,
           status: 'unchecked',

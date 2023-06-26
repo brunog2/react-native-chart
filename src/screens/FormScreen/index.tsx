@@ -45,7 +45,6 @@ export const FormScreen = () => {
     reValidateMode: 'onSubmit',
     defaultValues: {
       multiSelect: [],
-      dynamicInputs: [{}],
     },
   });
   const {fields, append, remove} = useFieldArray({
@@ -99,6 +98,7 @@ export const FormScreen = () => {
   // };
 
   const handleSelectValueChange = (items: TableDataInterface[]) => {
+    console.log('VALUE CHANGES', items);
     const itemsToRemove = fields.filter(
       field => !items.some(item => item.id === field.id),
     );
@@ -119,7 +119,7 @@ export const FormScreen = () => {
       const field = {
         ...itemToAppend,
         status: itemToAppend.status || 'unchecked',
-        value: '',
+        value: itemToAppend.age.toString() || '',
       };
       append(field);
     }
@@ -145,10 +145,12 @@ export const FormScreen = () => {
       <ControlledMultiSelect
         data={tableData}
         itemKey="id"
+        setValue={setValue}
         labelKey="name"
         formControl={control}
         formError={errors.multiSelect}
         controllerName="multiSelect"
+        defaultValue={[tableData[0]]}
         rules={defaultRules}
         onValueChange={handleSelectValueChange}>
         Selecione os itens
@@ -159,10 +161,11 @@ export const FormScreen = () => {
         fields.map((field, index) => {
           return (
             <View key={field.uuid}>
-              <Text variant="titleSmall">{fields[index].name || ''}</Text>
+              <Text variant="titleSmall">{fields[index]?.name || ''}</Text>
               <MaterialTextInput
                 controllerName={`dynamicInputs.${index}.value`}
                 formControl={control}
+                defaultValue={''}
                 {...register(`dynamicInputs.${index}.value`)}
                 placeholder={fields[index].name || ''}
                 formError={errors?.dynamicInputs?.[index]?.value}

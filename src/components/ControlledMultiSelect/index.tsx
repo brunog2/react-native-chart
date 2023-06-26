@@ -1,5 +1,10 @@
-import React, {forwardRef, useState} from 'react';
-import {Control, Controller, RegisterOptions} from 'react-hook-form';
+import React, {forwardRef, useState, useEffect} from 'react';
+import {
+  Control,
+  Controller,
+  RegisterOptions,
+  UseFormSetValue,
+} from 'react-hook-form';
 import {Button, HelperText} from 'react-native-paper';
 import {GenericObject} from '../../types/GenericObjectType/genericObjectType';
 import {MaterialMultiSelect} from '../MaterialMultiSelect';
@@ -11,6 +16,7 @@ interface ControlledMultiSelectProps {
   itemKey: string;
   labelKey: string;
   formControl: Control<any>;
+  setValue: UseFormSetValue<any>;
   controllerName: string;
   defaultValue?: GenericObject[];
   rules?: RegisterOptions;
@@ -27,6 +33,7 @@ export const ControlledMultiSelect = forwardRef(
       labelKey,
       controllerName,
       formControl,
+      setValue,
       defaultValue,
       formError,
       rules,
@@ -43,26 +50,34 @@ export const ControlledMultiSelect = forwardRef(
           control={formControl}
           defaultValue={defaultValue}
           rules={rules}
-          render={({field: {value, onChange}}) => (
-            <>
-              <Button onPress={() => setVisible(true)} mode="outlined">
-                {children}
-              </Button>
-              <MultiSelect
-                data={data}
-                value={value}
-                itemKey={itemKey}
-                labelKey={labelKey}
-                onConfirm={data => {
-                  onChange(data);
-                  setVisible(false);
-                  onValueChange && onValueChange(data);
-                }}
-                onDismiss={() => setVisible(false)}
-                visible={visible}
-              />
-            </>
-          )}
+          render={({field: {value, onChange}}) => {
+            useEffect(() => {
+              if (defaultValue && (!value || value.length === 0)) {
+                setValue(controllerName, defaultValue);
+                onValueChange && onValueChange(defaultValue);
+              }
+            }, [onValueChange, controllerName, defaultValue, formControl]);
+            return (
+              <>
+                <Button onPress={() => setVisible(true)} mode="outlined">
+                  {children}
+                </Button>
+                <MultiSelect
+                  data={data}
+                  value={value}
+                  itemKey={itemKey}
+                  labelKey={labelKey}
+                  onConfirm={data => {
+                    onChange(data);
+                    setVisible(false);
+                    onValueChange && onValueChange(data);
+                  }}
+                  onDismiss={() => setVisible(false)}
+                  visible={visible}
+                />
+              </>
+            );
+          }}
         />
         <HelperText
           type="error"
