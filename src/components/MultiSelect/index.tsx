@@ -44,14 +44,14 @@ export const MultiSelect = ({
       setSelectedData(initialData);
     }
     if (value && data) {
-      console.log('VALOR', value);
+      // console.log('VALOR', value);
       const initialData = data.map((i: GenericObject) => {
         const isDefaultItem = value.some(
           defaultItem => defaultItem[itemKey] === i[itemKey],
         );
 
         if (isDefaultItem) {
-          console.log('É DEFAULT ITEM', value);
+          // console.log('É DEFAULT ITEM', value);
           return {
             ...i,
             status: 'checked',
@@ -73,12 +73,12 @@ export const MultiSelect = ({
   }, [data, value]);
 
   const toggleTaskCompletion = (item: GenericObject, itemKey: string) => {
-    console.log('COMPLETION', item, itemKey);
+    // console.log('COMPLETION', item, itemKey);
     if (selectedData.length > 0) {
       setSelectedData(prevData => {
         return prevData.map(i => {
           if (item[itemKey] === i[itemKey]) {
-            console.log('THE ITEM CHANGES', i);
+            // console.log('THE ITEM CHANGES', i);
             return {
               ...i,
               status: i.status === 'checked' ? 'unchecked' : 'checked',
@@ -88,12 +88,12 @@ export const MultiSelect = ({
         });
       });
     } else {
-      console.log('setting item', [{...item, status: 'checked'}]);
+      // console.log('setting item', [{...item, status: 'checked'}]);
       setSelectedData([{...item, status: 'checked'}]);
     }
   };
 
-  console.log('RENDER MULTI SELECT');
+  // console.log('RENDER MULTI SELECT');
 
   const renderOptionItem = (
     item: GenericObject,
@@ -119,8 +119,9 @@ export const MultiSelect = ({
   const handleConfirm = () =>
     onConfirm && onConfirm(selectedData.filter(i => i.status === 'checked'));
 
-  const isAllChecked = selectedData.every(i => i.status === 'checked');
-  const isSomeChecked = selectedData.some(i => i.status === 'checked');
+  let isAllChecked = selectedData.every(i => i.status === 'checked');
+  let isSomeChecked = selectedData.some(i => i.status === 'checked');
+
   const selectAllStatus = isAllChecked
     ? 'checked'
     : isSomeChecked

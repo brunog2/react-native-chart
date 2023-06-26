@@ -21,7 +21,7 @@ export const Checkbox = memo(
     // console.log('RENDER INTERNAL CHECKBOX', status, statusData);
 
     const handleOnPress = useCallback(() => {
-      console.log('ON PRESS');
+      // console.log('ON PRESS');
       // setStatusData(status => (status === 'checked' ? 'unchecked' : 'checked'));
       onPress && onPress(statusData);
     }, [statusData]);

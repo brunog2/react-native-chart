@@ -7,7 +7,7 @@ import {
   DropdownButtonMethodsProps,
 } from '../../components/DropdownButton';
 import {MaterialMultiSelect} from '../../components/MaterialMultiSelect';
-import {tableData} from '../../mocks/table';
+import {tableData, TableDataInterface} from '../../mocks/table';
 import {GenericObject} from '../../types/GenericObjectType/genericObjectType';
 import {MainView} from './styles';
 import {MaterialTextInput} from '../../components/MaterialTextInput';
@@ -18,6 +18,7 @@ import {
 import {formData} from '../../mocks/formData';
 import {MultiSelect} from '../../components/MultiSelect';
 import {ControlledMultiSelect} from '../../components/ControlledMultiSelect';
+import {View} from 'react-native';
 
 interface DataProps {
   object: GenericObject;
@@ -40,15 +41,18 @@ export const FormScreen = () => {
     register,
     setValue,
     getValues,
-  } = useForm<FormInterface>({
+  } = useForm<any>({
     reValidateMode: 'onSubmit',
     defaultValues: {
-      dynamicInputs: [{id: -1, name: '', value: ''}],
-      firstModuleInputs: [{id: -1, name: '', value: ''}],
-      secondModuleInputs: [{id: -1, name: '', value: ''}],
+      multiSelect: [],
+      dynamicInputs: [{}],
     },
   });
-  const {fields, remove} = useFieldArray({control, name: 'dynamicInputs'});
+  const {fields, append, remove} = useFieldArray({
+    control,
+    keyName: 'uuid',
+    name: 'dynamicInputs',
+  });
 
   // const [data, setData] = useState<DataProps[]>([]);
   // const [fetchedData, setFetchedData] = useState(formData);
@@ -65,7 +69,7 @@ export const FormScreen = () => {
 
   // const ref = useRef<DropdownButtonMethodsProps>(null);
 
-  console.log('Render FormScreen');
+  // console.log('Render FormScreen');
 
   const defaultRules = {
     required: 'Campo obrigatório',
@@ -94,6 +98,34 @@ export const FormScreen = () => {
   //   setValue(selectType, dynamicInputsForm);
   // };
 
+  const handleSelectValueChange = (items: TableDataInterface[]) => {
+    const itemsToRemove = fields.filter(
+      field => !items.some(item => item.id === field.id),
+    );
+    const itemsToAppend = items.filter(
+      item => !fields.some(field => field.id === item.id),
+    );
+
+    console.log('Fields', getValues('dynamicInputs'));
+    console.log('Items to append', itemsToAppend);
+    console.log('Items to remove', itemsToRemove);
+    let indexToRemove = [];
+    for (const itemToRemove of itemsToRemove) {
+      const index = fields.findIndex(item => item.id === itemToRemove.id);
+      indexToRemove.push(index);
+    }
+    remove(indexToRemove);
+    for (const itemToAppend of itemsToAppend) {
+      const field = {
+        ...itemToAppend,
+        status: itemToAppend.status || 'unchecked',
+        value: '',
+      };
+      append(field);
+    }
+    console.log('Fields', getValues('dynamicInputs'));
+  };
+
   return (
     <MainView>
       {/* <MaterialMultiSelect
@@ -118,14 +150,15 @@ export const FormScreen = () => {
         formError={errors.multiSelect}
         controllerName="multiSelect"
         rules={defaultRules}
-        onValueChange={items => console.log(items)}>
+        onValueChange={handleSelectValueChange}>
         Selecione os itens
       </ControlledMultiSelect>
 
-      {/* {getValues('dynamicInputs')[0].id !== -1 &&
+      {getValues('dynamicInputs') &&
+        getValues('dynamicInputs')?.length > 0 &&
         fields.map((field, index) => {
           return (
-            <>
+            <View key={field.uuid}>
               <Text variant="titleSmall">{fields[index].name || ''}</Text>
               <MaterialTextInput
                 controllerName={`dynamicInputs.${index}.value`}
@@ -135,9 +168,9 @@ export const FormScreen = () => {
                 formError={errors?.dynamicInputs?.[index]?.value}
                 rules={defaultRules}
               />
-            </>
+            </View>
           );
-        })} */}
+        })}
 
       {/* {getValues('dynamicInputs')[0].id !== -1 &&
         getValues('dynamicInputs').map((item, index) => {
