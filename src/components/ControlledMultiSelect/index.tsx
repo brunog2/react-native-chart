@@ -1,4 +1,4 @@
-import React, {forwardRef, useState, useEffect} from 'react';
+import React, {forwardRef, useState, useEffect, useRef} from 'react';
 import {
   Control,
   Controller,
@@ -51,10 +51,17 @@ export const ControlledMultiSelect = forwardRef(
           defaultValue={defaultValue}
           rules={rules}
           render={({field: {value, onChange}}) => {
+            const isFirstRun = useRef(true);
+
             useEffect(() => {
-              if (defaultValue && (!value || value.length === 0)) {
+              if (
+                isFirstRun.current &&
+                defaultValue &&
+                (!value || value.length === 0)
+              ) {
                 setValue(controllerName, defaultValue);
                 onValueChange && onValueChange(defaultValue);
+                isFirstRun.current = false;
               }
             }, [onValueChange, controllerName, defaultValue, formControl]);
             return (

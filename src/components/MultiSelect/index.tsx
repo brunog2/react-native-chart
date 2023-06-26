@@ -118,17 +118,20 @@ export const MultiSelect = ({
   const handleConfirm = () =>
     onConfirm && onConfirm(selectedData.filter(i => i.status === 'checked'));
 
-  let isAllChecked = selectedData.every(i => i.status === 'checked');
-  let isSomeChecked = selectedData.some(i => i.status === 'checked');
+  const selectAllStatus = selectedData.reduce((status, item) => {
+    if (status === 'indeterminate') {
+      return status;
+    }
 
-  const selectAllStatus = isAllChecked
-    ? 'checked'
-    : isSomeChecked
-    ? 'indeterminate'
-    : 'unchecked';
+    if (status === 'checked' && item.status !== 'checked') {
+      return 'indeterminate';
+    }
+
+    return item.status;
+  }, 'unchecked');
 
   const handleCheckAll = () => {
-    if (isAllChecked) {
+    if (selectAllStatus === 'checked') {
       setSelectedData(prevData =>
         prevData.map(i => ({...i, status: 'unchecked'})),
       );
