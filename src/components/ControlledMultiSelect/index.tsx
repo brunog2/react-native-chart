@@ -12,8 +12,8 @@ import {MultiSelect} from '../MultiSelect';
 import {BottomSheetMultiSelect} from '../BottomSheetMultiSelect';
 
 interface ControlledMultiSelectProps {
-  children: React.ReactNode;
   data: GenericObject[];
+  title?: string;
   itemKey: string;
   labelKey: string;
   formControl: Control<any>;
@@ -39,6 +39,7 @@ export const ControlledMultiSelect = forwardRef(
       defaultValue,
       formError,
       rules,
+      title,
       onValueChange,
     }: ControlledMultiSelectProps,
     ref,
@@ -70,10 +71,11 @@ export const ControlledMultiSelect = forwardRef(
               <>
                 <BottomSheetMultiSelect
                   data={data}
-                  title={'Selecione os itens'}
+                  title={title || ''}
                   value={value}
                   itemKey={itemKey}
                   labelKey={labelKey}
+                  singleSelect={singleSelect}
                   onConfirm={data => {
                     onChange(data);
                     setVisible(false);

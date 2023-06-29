@@ -14,11 +14,11 @@ import {useNavigation} from '@react-navigation/native';
 interface MultiSelectProps {
   data: GenericObject[];
   title?: string;
-  value?: GenericObject[];
+  value?: GenericObject;
   singleSelect?: boolean;
   itemKey: string;
   labelKey: string;
-  onConfirm?: (items: GenericObject[]) => void;
+  onConfirm?: (value: GenericObject) => void;
   onDismiss?: () => void;
 }
 
@@ -45,9 +45,10 @@ export const BottomSheetMultiSelect = ({
     }
     if (value && data) {
       // console.log('VALOR', value);
+
       const initialData = data.map((i: GenericObject) => {
         const isDefaultItem = value.some(
-          defaultItem => defaultItem[itemKey] === i[itemKey],
+          (defaultItem: GenericObject) => defaultItem[itemKey] === i[itemKey],
         );
 
         if (isDefaultItem) {
@@ -170,8 +171,6 @@ export const BottomSheetMultiSelect = ({
     ),
     [],
   );
-  const {goBack} = useNavigation();
-
   // console.log('IS NONE CHECKED', isNoneChecked, selectAllStatus);
   return (
     <>
@@ -189,7 +188,11 @@ export const BottomSheetMultiSelect = ({
           </Text>
           {!singleSelect && (
             <>
-              <Searchbar style={{margin: 12}} placeholder="Pesquise aqui" />
+              <Searchbar
+                style={{margin: 12}}
+                placeholder="Pesquise aqui"
+                value="a"
+              />
               <Checkbox
                 label={'Selecionar todos'}
                 status={selectAllStatus}

@@ -170,12 +170,14 @@ export const FormScreen = () => {
         data={tableData}
         itemKey="id"
         setValue={setValue}
+        defaultValue={[tableData[2]]}
         labelKey="name"
         formControl={control}
         formError={errors.multiSelect}
         controllerName="multiSelect"
         rules={defaultRules}
         onValueChange={handleSelectValueChange}
+        title="Selecione o item"
         singleSelect
       />
 
