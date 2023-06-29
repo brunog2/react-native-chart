@@ -1,30 +1,73 @@
-import React, {useRef} from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
+import {View, Text, StyleSheet, Button} from 'react-native';
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {IconButton} from 'react-native-paper';
 
-import {StyleSheet, Text, View, Button} from 'react-native';
-import {BottomSheet} from '../../components/BottomSheet';
+export const BottomSheetScreen = () => {
+  // ref
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-export const BottomSheetScreen = (): JSX.Element => {
-  const bottomSheetModalRef: any = useRef(null);
+  // variables
+  const snapPoints = useMemo(() => ['25%', '50%', '75%'], []);
 
-  const handleOpenModalPress = () => {
-    console.log('chegou aqui');
-    bottomSheetModalRef.current?.handleOpenModal();
-  };
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
 
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
+    ),
+    [],
+  );
+
+  // renders
   return (
-    <View style={styles.container}>
-      <Button onPress={handleOpenModalPress} title="Open Modal" color="black" />
-      <Button onPress={handleOpenModalPress} title="Open Modal" color="black" />
-      <BottomSheet ref={bottomSheetModalRef} />
-    </View>
+    <GestureHandlerRootView style={[styles.container]}>
+      <BottomSheetModalProvider>
+        <View style={styles.container}>
+          <Button
+            onPress={handlePresentModalPress}
+            title="Present Modal"
+            color="black"
+          />
+
+          <BottomSheetModal
+            enableDismissOnClose
+            enablePanDownToClose
+            ref={bottomSheetModalRef}
+            backdropComponent={renderBackdrop}
+            index={1}
+            snapPoints={snapPoints}
+            onChange={handleSheetChanges}>
+            <View style={styles.contentContainer}>
+              <Text>Awesome 🎉</Text>
+            </View>
+          </BottomSheetModal>
+        </View>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 24,
     justifyContent: 'center',
-    backgroundColor: 'yellow',
   },
   contentContainer: {
     flex: 1,

@@ -9,6 +9,7 @@ import {Button, HelperText} from 'react-native-paper';
 import {GenericObject} from '../../types/GenericObjectType/genericObjectType';
 import {MaterialMultiSelect} from '../MaterialMultiSelect';
 import {MultiSelect} from '../MultiSelect';
+import {BottomSheetMultiSelect} from '../BottomSheetMultiSelect';
 
 interface ControlledMultiSelectProps {
   children: React.ReactNode;
@@ -21,13 +22,14 @@ interface ControlledMultiSelectProps {
   defaultValue?: GenericObject[];
   rules?: RegisterOptions;
   formError?: any;
+  singleSelect?: boolean;
   onValueChange?: (data: any[]) => void;
 }
 
 export const ControlledMultiSelect = forwardRef(
   (
     {
-      children,
+      singleSelect,
       data,
       itemKey,
       labelKey,
@@ -66,11 +68,9 @@ export const ControlledMultiSelect = forwardRef(
             }, [onValueChange, controllerName, defaultValue, formControl]);
             return (
               <>
-                <Button onPress={() => setVisible(true)} mode="outlined">
-                  {children}
-                </Button>
-                <MultiSelect
+                <BottomSheetMultiSelect
                   data={data}
+                  title={'Selecione os itens'}
                   value={value}
                   itemKey={itemKey}
                   labelKey={labelKey}
@@ -80,7 +80,6 @@ export const ControlledMultiSelect = forwardRef(
                     onValueChange && onValueChange(data);
                   }}
                   onDismiss={() => setVisible(false)}
-                  visible={visible}
                 />
               </>
             );

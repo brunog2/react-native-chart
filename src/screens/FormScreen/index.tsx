@@ -21,6 +21,7 @@ import {ControlledMultiSelect} from '../../components/ControlledMultiSelect';
 import {Dimensions, View} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
+import {BottomSheetMultiSelect} from '../../components/BottomSheetMultiSelect';
 
 interface DataProps {
   object: GenericObject;
@@ -174,9 +175,9 @@ export const FormScreen = () => {
         formError={errors.multiSelect}
         controllerName="multiSelect"
         rules={defaultRules}
-        onValueChange={handleSelectValueChange}>
-        Selecione os itens
-      </ControlledMultiSelect>
+        onValueChange={handleSelectValueChange}
+        singleSelect
+      />
 
       <BarChart
         yAxisSuffix="M"
