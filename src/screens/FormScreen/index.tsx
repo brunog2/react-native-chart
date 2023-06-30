@@ -21,6 +21,7 @@ import {ControlledMultiSelect} from '../../components/ControlledMultiSelect';
 import {Dimensions, View} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
+import {ScrollView} from 'react-native-gesture-handler';
 
 interface DataProps {
   object: GenericObject;
@@ -43,6 +44,7 @@ export const FormScreen = () => {
     register,
     setValue,
     getValues,
+    watch,
   } = useForm<any>({
     reValidateMode: 'onSubmit',
     defaultValues: {
@@ -128,15 +130,6 @@ export const FormScreen = () => {
     console.log('Fields', getValues('dynamicInputs'));
   };
 
-  const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43],
-      },
-    ],
-  };
-
   const chartConfig: AbstractChartConfig = {
     backgroundGradientFrom: '#0c00ad',
     backgroundGradientFromOpacity: 1,
@@ -148,6 +141,20 @@ export const FormScreen = () => {
     useShadowColorFromDataset: false, // optional,
   };
   const screenWidth = Dimensions.get('window').width;
+
+  const dynamicInputs = watch('dynamicInputs');
+
+  const labels = dynamicInputs?.map(i => i.name) || [];
+  const datasets = [
+    {data: dynamicInputs?.map(i => i.value || 0) || []},
+    {data: [0]},
+    {data: [10]},
+  ];
+
+  const data = {
+    labels,
+    datasets,
+  };
 
   return (
     <MainView>
@@ -178,17 +185,27 @@ export const FormScreen = () => {
         Selecione os itens
       </ControlledMultiSelect>
 
-      <BarChart
-        yAxisSuffix="M"
-        style={{borderRadius: 5}}
-        data={data}
-        width={screenWidth}
-        height={220}
-        yAxisLabel="$"
-        chartConfig={chartConfig}
-        verticalLabelRotation={30}
-      />
-
+      <ScrollView horizontal>
+        <BarChart
+          yAxisLabel="R$ "
+          yAxisSuffix="M"
+          showValuesOnTopOfBars
+          yLabelsOffset={5}
+          data={data}
+          withHorizontalLabels
+          horizontalLabelRotation={0}
+          segments={5}
+          width={
+            data.labels.length < 5
+              ? screenWidth
+              : (data.labels.length * screenWidth) / 5
+          }
+          height={220}
+          chartConfig={chartConfig}
+          verticalLabelRotation={30}
+          fromZero
+        />
+      </ScrollView>
       {getValues('dynamicInputs') &&
         getValues('dynamicInputs')?.length > 0 &&
         fields.map((field, index) => {
