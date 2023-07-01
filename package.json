@@ -1,5 +1,5 @@
 {
-  "name": "ReactNativeChart",
+  "name": "ReactNativeUtils",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -8,7 +8,9 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "format": "prettier --check ./src"
+    "format": "prettier --check ./src",
+    "bundle:android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle",
+    "build:android": "yarn bundle:android && cd android && ./gradlew clean && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",
