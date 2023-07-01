@@ -21,7 +21,7 @@ import {ControlledMultiSelect} from '../../components/ControlledMultiSelect';
 import {Dimensions, View} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
-import {ScrollView} from 'react-native-gesture-handler';
+import {BottomSheetMultiSelect} from '../../components/BottomSheetMultiSelect';
 
 interface DataProps {
   object: GenericObject;
@@ -176,14 +176,16 @@ export const FormScreen = () => {
         data={tableData}
         itemKey="id"
         setValue={setValue}
+        defaultValue={[tableData[2]]}
         labelKey="name"
         formControl={control}
         formError={errors.multiSelect}
         controllerName="multiSelect"
         rules={defaultRules}
-        onValueChange={handleSelectValueChange}>
-        Selecione os itens
-      </ControlledMultiSelect>
+        onValueChange={handleSelectValueChange}
+        title="Selecione o item"
+        singleSelect
+      />
 
       <ScrollView horizontal>
         <BarChart

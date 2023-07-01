@@ -9,10 +9,11 @@ import {Button, HelperText} from 'react-native-paper';
 import {GenericObject} from '../../types/GenericObjectType/genericObjectType';
 import {MaterialMultiSelect} from '../MaterialMultiSelect';
 import {MultiSelect} from '../MultiSelect';
+import {BottomSheetMultiSelect} from '../BottomSheetMultiSelect';
 
 interface ControlledMultiSelectProps {
-  children: React.ReactNode;
   data: GenericObject[];
+  title?: string;
   itemKey: string;
   labelKey: string;
   formControl: Control<any>;
@@ -21,13 +22,14 @@ interface ControlledMultiSelectProps {
   defaultValue?: GenericObject[];
   rules?: RegisterOptions;
   formError?: any;
+  singleSelect?: boolean;
   onValueChange?: (data: any[]) => void;
 }
 
 export const ControlledMultiSelect = forwardRef(
   (
     {
-      children,
+      singleSelect,
       data,
       itemKey,
       labelKey,
@@ -37,6 +39,7 @@ export const ControlledMultiSelect = forwardRef(
       defaultValue,
       formError,
       rules,
+      title,
       onValueChange,
     }: ControlledMultiSelectProps,
     ref,
@@ -66,21 +69,19 @@ export const ControlledMultiSelect = forwardRef(
             }, [onValueChange, controllerName, defaultValue, formControl]);
             return (
               <>
-                <Button onPress={() => setVisible(true)} mode="outlined">
-                  {children}
-                </Button>
-                <MultiSelect
+                <BottomSheetMultiSelect
                   data={data}
+                  title={title || ''}
                   value={value}
                   itemKey={itemKey}
                   labelKey={labelKey}
+                  singleSelect={singleSelect}
                   onConfirm={data => {
                     onChange(data);
                     setVisible(false);
                     onValueChange && onValueChange(data);
                   }}
                   onDismiss={() => setVisible(false)}
-                  visible={visible}
                 />
               </>
             );

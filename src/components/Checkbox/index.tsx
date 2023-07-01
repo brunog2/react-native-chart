@@ -1,14 +1,20 @@
 import React, {memo, useCallback, useEffect} from 'react';
-import {Checkbox as MaterialCheckbox} from 'react-native-paper';
+import {
+  Checkbox as MaterialCheckbox,
+  Text,
+  TouchableRipple,
+} from 'react-native-paper';
+import {IOSView} from './styles';
 
 interface CheckboxProps {
   label: string;
   status?: 'unchecked' | 'checked' | 'indeterminate';
   onPress?: (status: 'unchecked' | 'checked' | 'indeterminate') => void;
+  type?: 'ios' | 'android';
 }
 
 export const Checkbox = memo(
-  ({label, status, onPress}: CheckboxProps) => {
+  ({label, status, onPress, type}: CheckboxProps) => {
     const [statusData, setStatusData] = React.useState<
       'unchecked' | 'checked' | 'indeterminate'
     >(status || 'unchecked');
@@ -27,11 +33,22 @@ export const Checkbox = memo(
     }, [statusData]);
 
     return (
-      <MaterialCheckbox.Item
-        status={statusData}
-        onPress={handleOnPress}
-        label={label}
-      />
+      <>
+        {type === 'ios' ? (
+          <TouchableRipple onPress={handleOnPress}>
+            <IOSView>
+              <Text variant="bodyLarge">{label}</Text>
+              <MaterialCheckbox.IOS status={statusData} />
+            </IOSView>
+          </TouchableRipple>
+        ) : (
+          <MaterialCheckbox.Item
+            status={statusData}
+            onPress={handleOnPress}
+            label={label}
+          />
+        )}
+      </>
     );
   },
   (prevProps, nextProps) => {
