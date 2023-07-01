@@ -6,7 +6,10 @@ import {BottomSheetScreen} from './src/screens/BottomSheetScreen';
 import {DataTableScreen} from './src/screens/DataTableScreen';
 import {RootStackParamList} from './src/types/NavigationStackType/navigationStackType';
 import {FormScreen} from './src/screens/FormScreen';
-import {Provider as PaperProvider} from 'react-native-paper';
+import {
+  Provider as PaperProvider,
+  MD3LightTheme as DefaultTheme,
+} from 'react-native-paper';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {StyleSheet} from 'react-native';
@@ -18,7 +21,7 @@ const App = () => {
     <NavigationContainer>
       <GestureHandlerRootView style={[styles.container]}>
         <BottomSheetModalProvider>
-          <PaperProvider>
+          <PaperProvider theme={DefaultTheme}>
             <Stack.Navigator
               screenOptions={() => ({animation: 'slide_from_right'})}>
               <Stack.Screen name="Home" component={HomeScreen} />

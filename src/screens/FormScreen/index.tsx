@@ -18,7 +18,7 @@ import {
 import {formData} from '../../mocks/formData';
 import {MultiSelect} from '../../components/MultiSelect';
 import {ControlledMultiSelect} from '../../components/ControlledMultiSelect';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, ScrollView, View} from 'react-native';
 import {BarChart} from 'react-native-chart-kit';
 import {AbstractChartConfig} from 'react-native-chart-kit/dist/AbstractChart';
 import {BottomSheetMultiSelect} from '../../components/BottomSheetMultiSelect';
@@ -36,6 +36,7 @@ interface FormInterface {
 }
 
 export const FormScreen = () => {
+  const [singleSelect, setSingleSelect] = useState(false);
   const {
     formState: {errors},
     control,
@@ -184,10 +185,16 @@ export const FormScreen = () => {
         rules={defaultRules}
         onValueChange={handleSelectValueChange}
         title="Selecione o item"
-        singleSelect
+        singleSelect={singleSelect}
       />
 
-      <ScrollView horizontal>
+      <Text variant="bodyLarge">Single select: {singleSelect.toString()}</Text>
+
+      <Button mode="outlined" onPress={() => setSingleSelect(!singleSelect)}>
+        Change selection mode
+      </Button>
+
+      <ScrollView horizontal style={{marginVertical: 12}}>
         <BarChart
           yAxisLabel="R$ "
           yAxisSuffix="M"
