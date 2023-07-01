@@ -194,7 +194,7 @@ export const FormScreen = () => {
         Change selection mode
       </Button>
 
-      <ScrollView horizontal style={{marginVertical: 12}}>
+      <ScrollView horizontal>
         <BarChart
           yAxisLabel="R$ "
           yAxisSuffix="M"
