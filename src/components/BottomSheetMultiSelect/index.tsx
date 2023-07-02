@@ -188,11 +188,7 @@ export const BottomSheetMultiSelect = ({
           </Text>
           {!singleSelect && (
             <>
-              <Searchbar
-                style={{margin: 12}}
-                placeholder="Pesquise aqui"
-                value="a"
-              />
+              <Searchbar style={{margin: 12}} placeholder="Pesquise aqui" />
               <Checkbox
                 label={'Selecionar todos'}
                 status={selectAllStatus}
